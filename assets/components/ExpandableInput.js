@@ -1,3 +1,4 @@
+import { useState } from "react";
 import { Text, View, StyleSheet, TextInput, ScrollView, Button } from 'react-native';
 
 const lightGrey = '#4c566a';
@@ -8,14 +9,29 @@ const padding = 10;
 const borderRadius = 10;
 
 const ExpandableInput = () => {
+    // State keeps track of input character amount
+    const maxCharacters = 50;
+    const [currentCharacters, setCurrentCharacters] = useState(0);
+
+    const updateCounter = (input) => {
+        setCurrentCharacters(input.length);
+    }
+
     return(
     <View style={styles.container}>
         <Text style={styles.titleText}>Description</Text>
         <View style={styles.inputView}>
             <ScrollView style={styles.scrollInputView}>
-                <TextInput style={styles.inputStyling} multiline={true}>ExpandableInput</TextInput>
+                <TextInput
+                    style={styles.inputStyling}
+                    multiline={true}
+                    onChangeText={input => updateCounter(input)}
+                    maxLength={maxCharacters}
+                />
             </ScrollView>
-            <Text style={styles.characterLimitText}>0/150</Text>
+            <Text style={styles.characterLimitText}>
+                { currentCharacters + "/" + maxCharacters}
+            </Text>
         </View>
         <View style={styles.buttonView}>
             <Button onPress={() => {}} title={"DONE"} style={styles.buttonStyle} color={accentBlue}/>
