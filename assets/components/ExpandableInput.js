@@ -96,6 +96,7 @@ const styles = StyleSheet.create({
       paddingHorizontal: padding,
       width: 400,
       height: 300,
+      margin: 10,
       borderRadius: borderRadius,
       justifyContent: 'center',
     },
