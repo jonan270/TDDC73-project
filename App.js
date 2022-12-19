@@ -13,9 +13,11 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
-      <PasswordInput/>
+      <PasswordInput
+        minimumCharacters={4}
+      />
 
-      
+
       <ExpandableInput
         maxCharacters={150}
         title="Write about yourself"
