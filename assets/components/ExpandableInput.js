@@ -14,14 +14,14 @@ const borderRadius = 10;
 
 const collapsedHeight = 100;
 
-const ExpandableInput = () => {
+const ExpandableInput = (props) => {
     // State keeps track of input character amount and content
-    const maxCharacters = 150;
     const [content, setContent] = useState("");
+    const maxCharacters = props.maxCharacters ?? 300; // Optional prop defaults to 300
     const [currentCharacters, setCurrentCharacters] = useState(0);
 
     // State to handle if component is expanded or not
-    const [expanded, setExpanded] = useState(true);
+    const [expanded, setExpanded] = useState(false);
 
     // Updates content state and character counter when
     // user inputs data.
@@ -30,12 +30,20 @@ const ExpandableInput = () => {
         setCurrentCharacters(input.length);
     }
 
+    const componentSubmission = () => {
+        setExpanded(false)
+
+        // If provided, call parents handleSubmission.
+        if(props.handleSubmission)
+            props.handleSubmission(content);
+    }
+
     // Expanded component is larger, displays the character counter
     // and has a "DONE" button.
     return expanded ?
     (
         <View style={styles.container}>
-            <Text style={styles.titleText}>Description</Text>
+            <Text style={styles.titleText}>{props.title ?? ""}</Text>
             <View style={styles.inputView}>
                 <ScrollView style={styles.scrollInputView}>
                     <TextInput
@@ -51,7 +59,12 @@ const ExpandableInput = () => {
                 </Text>
             </View>
             <View style={styles.buttonView}>
-                <Button onPress={() => {setExpanded(false)}} title={"DONE"} style={styles.buttonStyle} color={accentBlue}/>
+                <Button
+                    onPress={() => componentSubmission()}
+                    title={props.buttonTitle ?? "DONE"}
+                    style={styles.buttonStyle}
+                    color={accentBlue}
+                />
             </View>
         </View>
     )
@@ -59,7 +72,7 @@ const ExpandableInput = () => {
     (
         <TouchableOpacity onPress={() => {setExpanded(true)}}>
             <View style={[styles.container, {height: collapsedHeight}]}>
-                <Text style={styles.titleText}>Description</Text>
+                <Text style={styles.titleText}>{props.title ?? ""}</Text>
                 <View style={[styles.inputView, {height: collapsedHeight / 2}]}>
                     <ScrollView style={[styles.scrollInputView, {height: collapsedHeight / 2}]}>
                         <Text style={{color: 'white'}} numberOfLines={1}>{content}</Text>
