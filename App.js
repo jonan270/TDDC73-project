@@ -1,7 +1,9 @@
 import { StatusBar } from 'expo-status-bar';
 import { StyleSheet, Text, View } from 'react-native';
-import ExpandableInput from './assets/components/ExpandableInput';
 import { useState } from 'react';
+
+import PasswordInput from './assets/components/PasswordInput';
+import ExpandableInput from './assets/components/ExpandableInput';
 
 export default function App() {
   const [submittedText, setSubmittedText] = useState("");
@@ -11,6 +13,9 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
+      <PasswordInput/>
+
+      
       <ExpandableInput
         maxCharacters={150}
         title="Write about yourself"
