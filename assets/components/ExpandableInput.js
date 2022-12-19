@@ -1,5 +1,9 @@
 import { useState } from "react";
-import { Text, View, StyleSheet, TextInput, ScrollView, Button } from 'react-native';
+import {
+    Text, View, StyleSheet,
+    TextInput, ScrollView, Button,
+    TouchableOpacity, 
+} from 'react-native';
 
 const lightGrey = '#4c566a';
 const darkGrey = '#2e3440';
@@ -8,35 +12,61 @@ const accentBlue = '#81a1c1';
 const padding = 10;
 const borderRadius = 10;
 
+const collapsedHeight = 100;
+
 const ExpandableInput = () => {
-    // State keeps track of input character amount
-    const maxCharacters = 50;
+    // State keeps track of input character amount and content
+    const maxCharacters = 150;
+    const [content, setContent] = useState("");
     const [currentCharacters, setCurrentCharacters] = useState(0);
 
-    const updateCounter = (input) => {
+    // State to handle if component is expanded or not
+    const [expanded, setExpanded] = useState(true);
+
+    // Updates content state and character counter when
+    // user inputs data.
+    const updateTextState = (input) => {
+        setContent(input);
         setCurrentCharacters(input.length);
     }
 
-    return(
-    <View style={styles.container}>
-        <Text style={styles.titleText}>Description</Text>
-        <View style={styles.inputView}>
-            <ScrollView style={styles.scrollInputView}>
-                <TextInput
-                    style={styles.inputStyling}
-                    multiline={true}
-                    onChangeText={input => updateCounter(input)}
-                    maxLength={maxCharacters}
-                />
-            </ScrollView>
-            <Text style={styles.characterLimitText}>
-                { currentCharacters + "/" + maxCharacters}
-            </Text>
+    // Expanded component is larger, displays the character counter
+    // and has a "DONE" button.
+    return expanded ?
+    (
+        <View style={styles.container}>
+            <Text style={styles.titleText}>Description</Text>
+            <View style={styles.inputView}>
+                <ScrollView style={styles.scrollInputView}>
+                    <TextInput
+                        style={styles.inputStyling}
+                        multiline={true}
+                        value={content}
+                        onChangeText={input => updateTextState(input)}
+                        maxLength={maxCharacters}
+                    />
+                </ScrollView>
+                <Text style={styles.characterLimitText}>
+                    { currentCharacters + "/" + maxCharacters }
+                </Text>
+            </View>
+            <View style={styles.buttonView}>
+                <Button onPress={() => {setExpanded(false)}} title={"DONE"} style={styles.buttonStyle} color={accentBlue}/>
+            </View>
         </View>
-        <View style={styles.buttonView}>
-            <Button onPress={() => {}} title={"DONE"} style={styles.buttonStyle} color={accentBlue}/>
-        </View>
-    </View>
+    )
+    : // Non expanded component is expanded via component touch. Re-use a lot of styling.
+    (
+        <TouchableOpacity onPress={() => {setExpanded(true)}}>
+            <View style={[styles.container, {height: collapsedHeight}]}>
+                <Text style={styles.titleText}>Description</Text>
+                <View style={[styles.inputView, {height: collapsedHeight / 2}]}>
+                    <ScrollView style={[styles.scrollInputView, {height: collapsedHeight / 2}]}>
+                        <Text style={{color: 'white'}} numberOfLines={1}>{content}</Text>
+                    </ScrollView>
+                </View>
+            </View>
+        </TouchableOpacity>
     );
 }
 
