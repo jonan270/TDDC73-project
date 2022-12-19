@@ -14,7 +14,10 @@ export default function App() {
   return (
     <View style={styles.container}>
       <PasswordInput
-        // minimumCharacters={4}
+        minimumCharacters={4}
+        requireNumbers={true}
+        requireSpecialCharacters={true}
+        requireMixedCases={true}
       />
 
 

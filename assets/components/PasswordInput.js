@@ -24,17 +24,18 @@ const PasswordInput = (props) => {
     const [barColor, setBarColor] = useState(darkGrey);
     const [barFill, setBarFill] = useState("0%");
 
+    const minimumCharacters = props.minimumCharacters ? props.minimumCharacters : 1;
+
     const exceedsCharacterLimit = (str) => {
-        let minimumLength = props.minimumCharacters ? props.minimumCharacters : 1;
+        let minimumLength = minimumCharacters;
         return str.length >= minimumLength;
     }
 
     // Check if string contains mix of upper and lowercase characters.
     // https://stackoverflow.com/questions/70509923/how-do-i-check-if-a-string-contains-both-lowercase-and-uppercase-letters-in-js
     const containsMixUpperLower = (str) => {
-        const
-        upper = /[A-Z]/.test(str),
-        lower = /[a-z]/.test(str);
+        let upper = /[A-Z]/.test(str);
+        let lower = /[a-z]/.test(str);
         return upper && lower;
     }
 
@@ -90,10 +91,11 @@ const PasswordInput = (props) => {
             
             // Count amount of rules fulfilled
             let rulesFulfilled = 0;
+            
             if(containsMixUpperLower(input)) rulesFulfilled++;
             if(containsNumbers(input)) rulesFulfilled++;
             if(containsSpecialChars(input)) rulesFulfilled++;
-            
+
             // It is also important that pw is of sufficient length.
             // For each rule fulfilled, increase level if password
             // length is also sufficient.
@@ -205,14 +207,39 @@ const PasswordInput = (props) => {
             </View>
             <Unorderedlist color={white} style={{marginLeft: 25}}>
                 <Text style={styles.itemText}>
-                    Be atleast 8 characters long.
+                    Be atleast {minimumCharacters} characters long.
                 </Text>
             </Unorderedlist>
-            <Unorderedlist color={white} style={{marginLeft: 25}}>
-                <Text style={styles.itemText}>
-                    Contain a special character.
-                </Text>
-            </Unorderedlist>
+            {
+                props.requireNumbers ? 
+                    <Unorderedlist color={white} style={{marginLeft: 25}}>
+                        <Text style={styles.itemText}>
+                            Contain a number.
+                        </Text>
+                    </Unorderedlist>
+                    : 
+                    null
+            }
+            {
+                props.requireSpecialCharacters ? 
+                    <Unorderedlist color={white} style={{marginLeft: 25}}>
+                        <Text style={styles.itemText}>
+                            Contain a special character.
+                        </Text>
+                    </Unorderedlist>
+                    : 
+                    null
+            }
+            {
+                props.requireNumbers ? 
+                    <Unorderedlist color={white} style={{marginLeft: 25}}>
+                        <Text style={styles.itemText}>
+                            Contain a mix of uppercase and lowercase characters.
+                        </Text>
+                    </Unorderedlist>
+                    : 
+                    null
+            }
             <View style={{marginVertical: 10}}>
                 <View style={{flexDirection: 'row'}}>
                     <Text style={styles.descriptionText}>Password strength: </Text>
