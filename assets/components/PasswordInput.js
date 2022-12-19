@@ -25,7 +25,7 @@ const PasswordInput = (props) => {
     const [barFill, setBarFill] = useState("0%");
 
     const exceedsCharacterLimit = (str) => {
-        let minimumLength = props.minimumCharacters ? props.minimumCharacters : 0;
+        let minimumLength = props.minimumCharacters ? props.minimumCharacters : 1;
         return str.length >= minimumLength;
     }
 
