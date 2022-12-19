@@ -2,7 +2,7 @@ import { useState } from "react";
 import { Ionicons } from '@expo/vector-icons';
 import Unorderedlist from 'react-native-unordered-list';
 
-import { Text, View, StyleSheet, TextInput } from 'react-native';
+import { Text, View, StyleSheet, TextInput, Button } from 'react-native';
 
 const lightGrey = '#4c566a';
 const darkGrey = '#2e3440';
@@ -20,15 +20,19 @@ const borderRadius = 10;
 const barHeight = 10;
 
 const PasswordInput = (props) => {
+    const [password, setPassword] = useState("");
     const [strengthDescriptor, setStrengthDescriptor] = useState("Insufficient");
     const [barColor, setBarColor] = useState(darkGrey);
     const [barFill, setBarFill] = useState("0%");
 
+    const [buttonEnabled, setButtonEnabled] = useState(false);
+
+    // Never allow empty passwords
     const minimumCharacters = props.minimumCharacters ? props.minimumCharacters : 1;
 
+    // Check if character limit is reached.
     const exceedsCharacterLimit = (str) => {
-        let minimumLength = minimumCharacters;
-        return str.length >= minimumLength;
+        return str.length >= minimumCharacters;
     }
 
     // Check if string contains mix of upper and lowercase characters.
@@ -52,6 +56,7 @@ const PasswordInput = (props) => {
         return specialChars.test(str);
     }
 
+    // Verify if requirements are fulfilled
     const fullfillsRequirements = (str) => {
         if (!exceedsCharacterLimit(str))
             return false;
@@ -81,11 +86,17 @@ const PasswordInput = (props) => {
     // Good: >=8 characters, mix upper+lower, numbers, 75% fill
     // Excellent: >=10 characters, mix upper+lower, numbers, special chars 100% fill
     const updateStrengthLevel = (input) => {
-        let level = 0;
+        let fullfills = fullfillsRequirements(input);
+
+        setPassword(input); // Update password string state
+        setButtonEnabled(fullfills); // Update enabled status of accept button
+
+        let level = 0; // Level = 0 means not fulfilled
 
         // If requirements are not fullfilled, level
         // will be insufficient.
-        if(fullfillsRequirements(input)) {
+        if(fullfills) {
+            setButtonEnabled(true);
             level++; // Bare minimum. Level 1
             let length = input.length;
             
@@ -106,6 +117,7 @@ const PasswordInput = (props) => {
 
         setPwLevel(level);
     }
+    
 
     const setPwLevel = (level) => {
         switch (level) {
@@ -129,7 +141,7 @@ const PasswordInput = (props) => {
                 setBarColor(green);
                 setBarFill("100%");
                 break;
-            default:
+            default: // Not fulfilled
                 setStrengthDescriptor("Insufficient");
                 setBarColor(darkGrey);
                 setBarFill("0%");
@@ -176,25 +188,36 @@ const PasswordInput = (props) => {
             height: barHeight,
             borderRadius: borderRadius/2,
         },
+        buttonView: {
+            marginVertical: padding,
+        },
         container: {
           backgroundColor: lightGrey,
           paddingHorizontal: padding,
           width: 400,
-          height: 300,
+          height: 350,
           margin: 10,
           borderRadius: borderRadius,
           justifyContent: 'center',
         },
     });
+
+    const componentSubmission = () => {
+        // If provided, call parents handleSubmission.
+        if(props.handleSubmission)
+            props.handleSubmission(password);
+    }
+
     return (
         <View style={styles.container}>
-            <Text style={styles.titleText}>Password Input</Text>
+            <Text style={styles.titleText}>{props.title ?? "Enter password"}</Text>
             <View style={{flexDirection: 'row', justifyContent: 'center', alignContent: 'center'}}>
                 <Text style={styles.descriptionText}>Choose a password:</Text>
                 <View style={styles.inputView}>
                     <TextInput
                         style={styles.inputStyling}
                         secureTextEntry={true}
+                        value={password}
                         onChangeText={input => updateStrengthLevel(input)}
                     />
                 </View>
@@ -231,7 +254,7 @@ const PasswordInput = (props) => {
                     null
             }
             {
-                props.requireNumbers ? 
+                props.requireMixedCases ? 
                     <Unorderedlist color={white} style={{marginLeft: 25}}>
                         <Text style={styles.itemText}>
                             Contain a mix of uppercase and lowercase characters.
@@ -248,6 +271,15 @@ const PasswordInput = (props) => {
             </View>
             <View style={styles.strengthMeter}>
                 <View style={styles.strengthBar}/>
+            </View>
+            <View style={styles.buttonView}>
+                <Button
+                    onPress={() => componentSubmission()}
+                    title={props.buttonTitle ?? "ACCEPT PASSWORD"}
+                    style={styles.buttonStyle}
+                    color={accentBlue}
+                    disabled={!buttonEnabled}
+                />
             </View>
         </View>
     );

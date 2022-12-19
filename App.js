@@ -6,9 +6,13 @@ import PasswordInput from './assets/components/PasswordInput';
 import ExpandableInput from './assets/components/ExpandableInput';
 
 export default function App() {
+  const [submittedPassword, setSubmittedPassword] = useState("");
   const [submittedText, setSubmittedText] = useState("");
 
-  const handleSubmission = (result) => {
+  const handleSubmissionPass = (result) => {
+    setSubmittedPassword(result);
+  }
+  const handleSubmissionAbout = (result) => {
     setSubmittedText(result);
   }
   return (
@@ -16,18 +20,19 @@ export default function App() {
       <PasswordInput
         minimumCharacters={4}
         requireNumbers={true}
-        requireSpecialCharacters={true}
+        requireSpecialCharacters={false}
         requireMixedCases={true}
+        handleSubmission={handleSubmissionPass}
       />
-
+      <Text>Submitted password: {submittedPassword}</Text>
 
       <ExpandableInput
         maxCharacters={150}
         title="Write about yourself"
-        handleSubmission={handleSubmission}
         buttonTitle="SUBMIT"
+        handleSubmission={handleSubmissionAbout}
       />
-      <Text>{submittedText}</Text>
+      <Text>Submitted about: {submittedText}</Text>
     </View>
   );
 }
