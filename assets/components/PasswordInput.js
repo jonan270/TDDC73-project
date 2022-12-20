@@ -4,6 +4,7 @@ import Unorderedlist from 'react-native-unordered-list';
 
 import { Text, View, StyleSheet, TextInput, Button } from 'react-native';
 
+// Colors based on Nord theme
 const lightGrey = '#4c566a';
 const darkGrey = '#2e3440';
 const accentBlue = '#81a1c1';
@@ -14,17 +15,21 @@ const orange = '#d08770';
 const yellow = '#ebcb8b';
 const green = '#a3be8c';
 
+// Visual properties
 const padding = 10;
 const borderRadius = 10;
-
 const barHeight = 10;
 
 const PasswordInput = (props) => {
+    // State for password string
     const [password, setPassword] = useState("");
+
+    // States related to password strength indicators
     const [strengthDescriptor, setStrengthDescriptor] = useState("Insufficient");
     const [barColor, setBarColor] = useState(darkGrey);
     const [barFill, setBarFill] = useState("0%");
 
+    // State for wheter password can be submitted or not
     const [buttonEnabled, setButtonEnabled] = useState(false);
 
     // Never allow empty passwords
@@ -79,6 +84,7 @@ const PasswordInput = (props) => {
         return true;
     }
 
+    // Update strength level according to rules fulfilled and length.
     // Example:
     // Insufficient: 0%, depends
     // Poor: <6 characters, 25% fill
@@ -119,6 +125,7 @@ const PasswordInput = (props) => {
     }
     
 
+    // Set component indicators according to provided strength level
     const setPwLevel = (level) => {
         switch (level) {
             case 1:

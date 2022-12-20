@@ -61,7 +61,7 @@ const ExpandableInput = (props) => {
             <View style={styles.buttonView}>
                 <Button
                     onPress={() => componentSubmission()}
-                    title={props.buttonTitle ?? "DONE"}
+                    title={props.buttonTitle ?? "SUBMIT"}
                     style={styles.buttonStyle}
                     color={accentBlue}
                 />

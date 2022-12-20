@@ -17,6 +17,17 @@ export default function App() {
   }
   return (
     <View style={styles.container}>
+
+      {/*
+      PasswordInput props (all props are optional):
+      · minimumCharacters: int - Minimum amount of allowed characters
+      · requireNumbers: bool - Is a number required in the password?
+      · requireSpecialCharacters: bool - Is a special character required in the password?
+      · requireMixedCases: bool - Is a mix of upper and lower case required in the password?
+      · title: string - Custom component title
+      · buttonTitle: string - Custom title on button
+      · handleSubmission: function - Function to recieve input when user presses submit
+      */}
       <PasswordInput
         minimumCharacters={4}
         requireNumbers={true}
@@ -26,10 +37,17 @@ export default function App() {
       />
       <Text>Submitted password: {submittedPassword}</Text>
 
+      {/*
+      ExpandableInput props (all props are optional):
+      · maxCharacters: int - Maximum amount of allowed characters
+      · title: string - Custom component title
+      · buttonTitle: string - Custom title on button
+      · handleSubmission: function - Function to recieve input when user presses submit
+      */}
       <ExpandableInput
         maxCharacters={150}
         title="Write about yourself"
-        buttonTitle="SUBMIT"
+        buttonTitle="DONE"
         handleSubmission={handleSubmissionAbout}
       />
       <Text>Submitted about: {submittedText}</Text>
